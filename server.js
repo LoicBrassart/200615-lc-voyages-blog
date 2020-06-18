@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const { db } = require("./conf");
 
 app.get("/", (req, res) => {
   res.send("Encore du travail ?");
@@ -19,20 +18,7 @@ app.get("/order", (req, res) => {
   }
 });
 
-app.get("/trips", (req, res) => {
-  db.query("SELECT 1+1", (err, results, fields) => {
-    if (err) {
-      res.status(500).send("Nope, cassé un truc!");
-      console.log(err);
-      return;
-    }
-    if (!results) {
-      res.status(400).send("J'ai rien trouvé!");
-      return;
-    }
-    res.send(results);
-  });
-});
+app.use("/trips", require("./routes/trips"));
 
 app.listen(3000, () => {
   console.log("API disponible sur http://localhost:3000");
