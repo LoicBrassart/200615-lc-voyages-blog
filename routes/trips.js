@@ -3,7 +3,14 @@ const router = express.Router();
 const { db } = require("../conf");
 
 router.get("/", (req, res) => {
-  db.query("SELECT label, price FROM voyage", (err, results, fields) => {
+  let sqlRequest = `SELECT label, price FROM voyage`;
+
+  const { budget } = req.query;
+  if (budget) {
+    sqlRequest += ` WHERE price<?`;
+  }
+
+  db.query(sqlRequest, [budget], (err, results, fields) => {
     if (err) {
       res.status(500).send("Nope, cassé un truc!");
       console.log(err.sql);
