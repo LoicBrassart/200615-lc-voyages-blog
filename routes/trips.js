@@ -39,6 +39,18 @@ router.get("/:id", (req, res) => {
   );
 });
 
+router.post("/", (req, res) => {
+  db.query("INSERT INTO voyage SET ?", [req.body], (err, results) => {
+    if (err) {
+      res.status(500).send("Nope, cassé un truc!");
+      console.log(err.sql);
+      console.log(err.message);
+      return;
+    }
+    res.send(results);
+  });
+});
+
 router.delete("/:id", (req, res) => {
   const id = req.params.id;
   db.query("DELETE FROM voyage WHERE id=?", [id], (err, results) => {
@@ -48,8 +60,17 @@ router.delete("/:id", (req, res) => {
       console.log(err.message);
       return;
     }
-    if (results.length === 0) {
-      res.status(400).send("J'ai rien trouvé!");
+    res.send(results);
+  });
+});
+
+router.put("/:id", (req, res) => {
+  const id = req.params.id;
+  db.query("UPDATE voyage SET ? WHERE id=?", [req.body, id], (err, results) => {
+    if (err) {
+      res.status(500).send("Nope, cassé un truc!");
+      console.log(err.sql);
+      console.log(err.message);
       return;
     }
     res.send(results);
