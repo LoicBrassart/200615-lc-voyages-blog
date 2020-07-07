@@ -47,6 +47,7 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/", (req, res) => {
+  req.body.price = parseFloat(req.body.price);
   db.query("INSERT INTO voyage SET ?", [req.body], (err, results) => {
     if (err) {
       res.status(500).send("Nope, cassé un truc!");
