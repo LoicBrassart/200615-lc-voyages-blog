@@ -23,6 +23,7 @@ app.get("/order", (req, res) => {
   }
 });
 
+app.use("/auth", require("./routes/auth"));
 app.use("/trips", require("./routes/trips"));
 
 app.listen(5050, () => {
