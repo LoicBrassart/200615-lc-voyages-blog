@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { db } = require("../conf");
+const passport = require("passport");
 
 router.get("/", (req, res) => {
   let sqlRequest = `SELECT label, price FROM voyage`;
@@ -45,6 +46,25 @@ router.get("/:id", (req, res) => {
     }
   );
 });
+
+// -------------------- Auth wall
+router.use((req, res, next) => {
+  passport.authenticate("jwt", { session: false }, (err, user, msg) => {
+    if (err) {
+      console.log("----");
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    if (!user) {
+      console.log("----");
+      console.log("No user found");
+      return res.sendStatus(500);
+    }
+    //req.user = user;
+    next();
+  })(req, res);
+});
+// -------------------- / Auth wall
 
 router.post("/", (req, res) => {
   req.body.price = parseFloat(req.body.price);
